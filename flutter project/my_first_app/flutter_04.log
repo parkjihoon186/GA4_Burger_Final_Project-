@@ -1,0 +1,86 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter run -d chrome
+
+## exception
+
+ShaderCompilerException: ShaderCompilerException: Shader compilation of "C:\Users\User\OneDrive\바탕 화면\flutter\packages\flutter\lib\src\material\shaders\ink_sparkle.frag" to "build\flutter_assets\shaders/ink_sparkle.frag" failed with exit code -1073741819.
+impellerc stdout:
+
+impellerc stderr:
+
+
+
+
+```
+#0      ShaderCompiler.compileShader (package:flutter_tools/src/build_system/tools/shader_compiler.dart:196:9)
+<asynchronous suspension>
+#1      writeBundle.<anonymous closure> (package:flutter_tools/src/bundle_builder.dart:214:25)
+<asynchronous suspension>
+#2      Future.wait.<anonymous closure> (dart:async/future.dart:525:21)
+<asynchronous suspension>
+#3      writeBundle (package:flutter_tools/src/bundle_builder.dart:177:3)
+<asynchronous suspension>
+#4      WebDevFS.update (package:flutter_tools/src/isolated/devfs_web.dart:348:9)
+<asynchronous suspension>
+#5      ResidentWebRunner._updateDevFS (package:flutter_tools/src/isolated/resident_web_runner.dart:762:35)
+<asynchronous suspension>
+#6      ResidentWebRunner.run.<anonymous closure> (package:flutter_tools/src/isolated/resident_web_runner.dart:360:41)
+<asynchronous suspension>
+#7      asyncGuard.<anonymous closure> (package:flutter_tools/src/base/async_guard.dart:108:24)
+<asynchronous suspension>
+```
+
+## flutter doctor
+
+```
+[32m[✓][39m Flutter (Channel stable, 3.35.6, on Microsoft Windows [Version 10.0.19045.6332], locale en-US) [709ms]
+    [32m•[39m Flutter version 3.35.6 on channel stable at C:\Users\User\OneDrive\바탕 화면\flutter
+    [32m•[39m Upstream repository https://github.com/flutter/flutter.git
+    [32m•[39m Framework revision 9f455d2486 (6 days ago), 2025-10-08 14:55:31 -0500
+    [32m•[39m Engine revision d2913632a4
+    [32m•[39m Dart version 3.9.2
+    [32m•[39m DevTools version 2.48.0
+    [32m•[39m Feature flags: enable-web, enable-linux-desktop, enable-macos-desktop, enable-windows-desktop,
+      enable-android, enable-ios, cli-animations, enable-lldb-debugging
+
+[32m[✓][39m Windows Version (10 Home 64-bit, 22H2, 2009) [3.5s]
+
+[31m[✗][39m Android toolchain - develop for Android devices [21ms]
+    [31m✗[39m Unable to locate Android SDK.
+      Install Android Studio from: https://developer.android.com/studio/index.html
+      On first launch it will assist you in installing the Android SDK components.
+      (or visit https://flutter.dev/to/windows-android-setup for detailed instructions).
+      If the Android SDK has been installed to a custom location, please use
+      `flutter config --android-sdk` to update to that location.
+
+
+[32m[✓][39m Chrome - develop for the web [10ms]
+    [32m•[39m Chrome at C:\Program Files\Google\Chrome\Application\chrome.exe
+
+[31m[✗][39m Visual Studio - develop Windows apps [8ms]
+    [31m✗[39m Visual Studio not installed; this is necessary to develop Windows apps.
+      Download at https://visualstudio.microsoft.com/downloads/.
+      Please install the "Desktop development with C++" workload, including all of its default components
+
+[33m[!][39m Android Studio (not installed) [4ms]
+    [32m•[39m Android Studio not found; download from https://developer.android.com/studio/index.html
+      (or visit https://flutter.dev/to/windows-android-setup for detailed instructions).
+
+[32m[✓][39m VS Code (version 1.105.0) [4ms]
+    [32m•[39m VS Code at C:\Users\User\AppData\Local\Programs\Microsoft VS Code
+    [32m•[39m Flutter extension version 3.120.0
+
+[32m[✓][39m Connected device (3 available) [18ms]
+    [32m•[39m Windows (desktop) • windows • windows-x64    • Microsoft Windows [Version 10.0.19045.6332]
+    [32m•[39m Chrome (web)      • chrome  • web-javascript • Google Chrome 141.0.7390.66
+    [32m•[39m Edge (web)        • edge    • web-javascript • Microsoft Edge 140.0.3485.94
+
+[32m[✓][39m Network resources [379ms]
+    [32m•[39m All expected network resources are available.
+
+[33m![39m Doctor found issues in 3 categories.
+```

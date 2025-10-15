@@ -1,0 +1,14 @@
+# Flutter/Dart specific
+.dart_tool/
+.packages
+build/
+
+# Sensitive environment variables
+.env
+
+# Google Services file (contains API keys)
+android/app/google-services.json
+
+# IDE-specific
+.idea/
+*.iml
