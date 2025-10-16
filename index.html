@@ -9,15 +9,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-PK4G4VRW');</script>
 <!-- End Google Tag Manager -->
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-6CPERH2GFM"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-6CPERH2GFM');
-</script>
 	<meta charset="utf-8">
 	<meta name="robots" content="noindex,nofollow">
 	<meta name="referrer" content="no-referrer-when-downgrade" />
@@ -778,6 +769,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   </script>
 
+  <script>
+    // '버거 메뉴 다운로드' 버튼 클릭 이벤트
+    document.querySelector('#buger-menu').addEventListener('click', function () {
+      dataLayer.push({
+        'event': 'custom_button_click', // GTM에서 사용할 커스텀 이벤트 이름
+        'button_name': '버거 메뉴 다운로드' // GTM 변수로 활용할 매개변수
+      });
+    });
+
+    // '주류 메뉴 다운로드' 버튼 클릭 이벤트
+    document.querySelector('#liquor-menu').addEventListener('click', function () {
+      dataLayer.push({
+        'event': 'custom_button_click',
+        'button_name': '주류 메뉴 다운로드'
+      });
+    });
+
+    // '찜하기' 버튼 클릭 이벤트 (모든 찜하기 버튼에 적용)
+    document.querySelectorAll('[data-tag-action="찜하기"]').forEach(function(button) {
+      button.addEventListener('click', function() {
+        dataLayer.push({
+          'event': 'add_to_wishlist',
+          'item_name': this.getAttribute('data-tag-title') // 클릭된 상품의 이름
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>
