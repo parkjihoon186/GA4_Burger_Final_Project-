@@ -4,13 +4,11 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'firebase_options.dart';
 
-void main() async{
-await dotenv.load(fileName: ".env");
-
-WidgetsFlutterBinding.ensureInitialized();
-await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-);
+void main() {
+  // Flutter 엔진 초기화 보장
+  WidgetsFlutterBinding.ensureInitialized();
+  // runApp을 먼저 호출하고, 앱 내부에서 비동기 초기화를 처리합니다.
+  // 이렇게 하면 핫 리스타트 시 개발 도구와의 연결이 안정적으로 이루어집니다.
   // It's good practice to have a single instance of the analytics service.
   // You could use a service locator like get_it for more complex apps.
   AnalyticsService.instance.logAppOpen();
@@ -30,33 +28,59 @@ class AnalyticsService {
   Future<void> logAppOpen() => _analytics.logAppOpen();
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // Firebase 초기화를 위한 Future를 정의합니다.
+  late final Future<FirebaseApp> _initialization;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialization = _initializeFirebase();
+  }
+
+  Future<FirebaseApp> _initializeFirebase() async {
+    await dotenv.load(fileName: ".env");
+    return Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: dotenv.env['WEB_API_KEY']!,
+        appId: dotenv.env['WEB_APP_ID']!,
+        messagingSenderId: dotenv.env['WEB_MESSAGING_SENDER_ID']!,
+        projectId: dotenv.env['WEB_PROJECT_ID']!,
+        measurementId: dotenv.env['WEB_MEASUREMENT_ID'],
+      ),
+    );
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return FutureBuilder(
+      future: _initialization,
+      builder: (context, snapshot) {
+        // 에러가 발생하면 에러 화면을 보여줍니다.
+        if (snapshot.hasError) {
+          return const Center(child: Text("Firebase 초기화 실패"));
+        }
+
+        // 초기화가 완료되면 앱의 메인 화면을 보여줍니다.
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
+            home: const MyHomePage(title: 'Flutter Demo Home Page'),
+          );
+        }
+
+        // 초기화 중에는 로딩 인디케이터를 보여줍니다.
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 }
@@ -83,14 +107,19 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
+    // 1. 버튼 클릭 시점의 카운터 값을 사용하여 GA 이벤트를 먼저 전송합니다.
+    // 이렇게 하면 데이터 분석 시 "사용자가 어떤 값에서 클릭했는지"를 정확히 알 수 있습니다.
+    AnalyticsService.instance.logEvent(
+      name: 'click_floating',
+      parameters: {
+        'color': 'blue',
+        'count_before_increment': _counter, // 파라미터 이름을 명확하게 변경
+      },
+    );
+
+    // 2. 이벤트 전송 후, 화면의 상태를 업데이트합니다.
     setState(() {
       _counter++;
-    });
-
-    // 버튼 클릭 이벤트를 AnalyticsService를 통해 기록합니다.
-    AnalyticsService.instance.logEvent(name: 'button_clicked', parameters: {
-      'screen_name': 'home_page',
-      'current_count': _counter as num,
     });
   }
 
